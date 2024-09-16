@@ -8,4 +8,17 @@
 // * Use a function to display the result
 // * Use the "{:?}" token in the println macro to display the result
 
-fn main() {}
+fn add(a: i32, b: i32) -> i32 {
+    a + b
+}
+
+fn display_result() {
+    let _sum = add(2, 6);
+
+    println!("Sum is {:?}", _sum);
+}
+
+fn main() {
+
+    display_result();
+}
