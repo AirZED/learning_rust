@@ -19,7 +19,7 @@ struct DrinkInfo {
     fluid_ounce: f64,
 }
 
-fn print_drink(drink:DrinkInfo) {
+fn print_drink(drink: DrinkInfo) {
     match drink.flavor {
         Flavour::Vanilla => println!("Vanilla"),
         Flavour::Orange => println!("Orange"),
@@ -33,5 +33,15 @@ fn main() {
         fluid_ounce: 24.87,
     };
 
-    print_drink(_my_drink)
+    print_drink(_my_drink);
+
+    // TUPLES
+
+    let coord = (2, 3);
+
+    println!("{:?}, {:?}", coord.0, coord.1);
+
+    // desctructuring tuples
+
+    let (x, y) = coord;
 }
