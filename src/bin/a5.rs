@@ -9,4 +9,26 @@
 // * Print the variable within the loop statement
 // * Use break to exit the loop
 
-fn main() {}
+fn main() {
+    let mut i = 1;
+
+    loop {
+        println!("{:?}", i);
+
+        i = i + 1;
+
+        if i == 5 {
+            break;
+        }
+    }
+
+    println!("END OF FIRST LOOP");
+
+    let mut a = 0;
+
+    while a < 6 {
+        println!("{:?}", a);
+
+        a = a + 1;
+    }
+}

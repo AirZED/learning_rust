@@ -10,4 +10,35 @@
 // * Print the variable within the while loop
 // * Do not use break to exit the loop
 
-fn main() {}
+enum Direction {
+    Up,
+    Down,
+    Left,
+    Right,
+}
+
+fn main() {
+    let mut a = 5;
+
+    while a > 0 {
+        println!("{:?}", a);
+        a = a - 1;
+    }
+
+    println!("Done!");
+
+    // ENUMS
+
+    fn which_way(go: Direction) -> String {
+        match go {
+            Direction::Up => "hmmp".to_string(),
+            Direction::Down => "down".to_string(),
+            Direction::Left => "left".to_string(),
+            Direction::Right => "right".to_string(),
+        }
+    }
+
+    let way = which_way(Direction::Up);
+
+    println!("{:?}", way)
+}

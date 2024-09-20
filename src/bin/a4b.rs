@@ -19,4 +19,16 @@ fn main() {
         3 => println!("Three"),
         _ => println!("Other"),
     }
+
+    let mut i = 3;
+
+    loop {
+        println!("{:?}", i);
+
+        i = i + 1;
+
+        if i == 5 {
+            break;
+        }
+    }
 }
