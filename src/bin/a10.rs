@@ -32,12 +32,7 @@ fn display_rating(book: &Book) {
     println!("Book rating = {:?}", book.rating);
 }
 fn main() {
-    let my_number = 400;
-    let size = my_number > 100;
-    printMesage(size);
-
-    // memory management
-
+ 
     let book = Book {
         pages: 20,
         rating: 30.5,
