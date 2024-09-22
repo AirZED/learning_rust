@@ -31,7 +31,7 @@ fn main() {
         println!("Equals to 5");
     }
 
-    let access_level = Access::Guest;
+    let access_level = Access::Admin;
 
     // this restrict access to only admins
     let can_access_file = match access_level {
