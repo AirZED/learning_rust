@@ -19,8 +19,8 @@ struct Person {
 // * Use an if expression to determine which person's info should be printed
 // * The name and colors should be printed using a function
 
-fn print_info(person: Person) {
-    println!("My name is {:?} and fav color is {:?}", person.name, person.favorite_color);
+fn print_info(data: &str) {
+    println!("{:?}", data);
 }
 
 fn main() {
@@ -32,7 +32,8 @@ fn main() {
 
     for person in people {
         if person.age <= 10 {
-            print_info(person);
+            print_info(&person.name);
+            print_info(&person.favorite_color);
         }
     }
 }
