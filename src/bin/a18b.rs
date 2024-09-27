@@ -54,15 +54,18 @@ impl Database {
 
     fn find_employee(&self, name: &str) -> Result<Employee, String> {
         match name {
-            "Anita" => Ok(Employee {
-                name: "Anita".to_string(),
-            }),
-            "Brody" => Ok(Employee {
-                name: "Brody".to_string(),
-            }),
-            "Catherine" => Ok(Employee {
-                name: "Catherine".to_string(),
-            }),
+            "Anita" =>
+                Ok(Employee {
+                    name: "Anita".to_string(),
+                }),
+            "Brody" =>
+                Ok(Employee {
+                    name: "Brody".to_string(),
+                }),
+            "Catherine" =>
+                Ok(Employee {
+                    name: "Catherine".to_string(),
+                }),
             _ => Err(String::from("employee not found")),
         }
     }
@@ -94,9 +97,16 @@ enum AuthorizationStatus {
 
 fn authorize(
     employee_name: &str,
-    location: ProtectedLocation,
+    location: ProtectedLocation
 ) -> Result<AuthorizationStatus, String> {
-    // put your code here
+    // connect to db
+
+    let db = Database::connect();
+
+    let employee = db.find_employee(employee_name);
+    let keycard = db.get_keycard(employee);
+
+    let access_level = ProtectedLocation::required_access_level(location);
 }
 
 fn main() {
