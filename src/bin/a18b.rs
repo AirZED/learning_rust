@@ -103,39 +103,45 @@ fn authorize(
 ) -> Result<AuthorizationStatus, String> {
     // * Write the body of the `authorize` function. The steps to authorize a user
     //   are:
-    //     1. Connect to the database
-    let db = Database::connect();
-    //     2. Find the employee with the `find_employee` database function
+    // let db = Database::connect();
 
-    let db_clone = db.clone();
-    let employee = db?.find_employee(employee_name);
+    // let db_clone = db.clone();
+    // let employee = db?.find_employee(employee_name);
 
-    match employee {
-        Ok(employee) => {
-            //     3. Get a keycard with the `get_keycard` database function
-            let keycard = db_clone?.get_keycard(&employee);
+    // match employee {
+    //     Ok(employee) => {
+    //         //     3. Get a keycard with the `get_keycard` database function
+    //         let keycard = db_clone?.get_keycard(&employee);
 
-            match keycard {
-                Ok(keycard) => {
-                    let access_level = keycard.access_level;
-                    let required_access_level = location.required_access_level();
+    //         match keycard {
+    //             Ok(keycard) => {
+    //                 let access_level = keycard.access_level;
+    //                 let required_access_level = location.required_access_level();
 
-                    match access_level {
-                        access_level if access_level >= required_access_level =>
-                            Ok(AuthorizationStatus::Allow),
-                        _ => Ok(AuthorizationStatus::Deny),
-                    }
-                }
-                Err(keycard) => Err(keycard.to_string()),
-            }
+    //                 match access_level {
+    //                     access_level if access_level >= required_access_level =>
+    //                         Ok(AuthorizationStatus::Allow),
+    //                     _ => Ok(AuthorizationStatus::Deny),
+    //                 }
+    //             }
+    //             Err(keycard) => Err(keycard.to_string()),
+    //         }
+    //  }
 
-            //     4. Determine if the keycard's `access_level` is sufficient, using the
-            //        `required_access_level` function implemented on `ProtectedLocation`.
-            //        * Higher  println!("{:?}", keycard);`access_level` values grant more access to `ProtectedLocations`.
-            //          1000 can access 1000 and lower. 800 can access 500 but not 1000, ...
-        }
+    //     Err(employee) => Err(employee.to_string()),
+    // }
 
-        Err(employee) => Err(employee.to_string()),
+    // CORRECTION
+    let db = Database::connect()?;
+    let employee = db.find_employee(employee_name)?;
+    let keycard = db.get_keycard(&employee)?;
+
+    let access_level = keycard.access_level;
+    let required_access_level = location.required_access_level();
+
+    match access_level {
+        access_level if access_level >= required_access_level => Ok(AuthorizationStatus::Allow),
+        _ => Ok(AuthorizationStatus::Deny),
     }
 
     // println!("{:?}", keycard.access_level);
@@ -158,6 +164,6 @@ fn main() {
     let catherine_authorized = authorize("Catherine", ProtectedLocation::Warehouse);
 
     println!("anita_authorized {:?}", anita_authorized);
-        println!("{brody_authorized:?}");
-        println!("{catherine_authorized:?}");
+    println!("{brody_authorized:?}");
+    println!("{catherine_authorized:?}");
 }
