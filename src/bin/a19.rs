@@ -1,4 +1,5 @@
 // Topic: HashMap
+use std::collections::HashMap;
 //
 // Requirements:
 // * Print the name and number of items in stock for a furniture store
@@ -13,4 +14,22 @@
 // Notes:
 // * Use a HashMap for the furniture store stock
 
-fn main() {}
+fn main() {
+    let mut items = HashMap::new();
+
+    items.insert("Chairs", 5);
+    items.insert("Beds", 3);
+    items.insert("Tables", 2);
+    items.insert("Couches", 0);
+
+    let mut total = 0;
+
+    for (item, amount) in items.iter() {
+        total += amount;
+    }
+
+    if total == 0 {
+        return println!("Out of stock");
+    }
+    println!("{:?}", total)
+}
