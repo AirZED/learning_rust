@@ -33,6 +33,22 @@ enum ProtectedLocation {
     Warehouse,
 }
 
+#[derive(Clone, Debug)]
+struct Employee {
+    name: String,
+}
+
+#[derive(Debug)]
+struct KeyCard {
+    access_level: u16,
+}
+
+#[derive(Clone, Copy, Debug)]
+enum AuthorizationStatus {
+    Allow,
+    Deny,
+}
+
 impl ProtectedLocation {
     fn required_access_level(&self) -> u16 {
         match self {
@@ -43,13 +59,15 @@ impl ProtectedLocation {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 struct Database;
 
 impl Database {
     fn connect() -> Result<Self, String> {
-        // In a production application, a database connection error is likely to occur here.
-        Ok(Database)
+        match "database connected" {
+            "database connected" => Ok(Database),
+            _ => Err("database connection error".to_owned()),
+        }
     }
 
     fn find_employee(&self, name: &str) -> Result<Employee, String> {
@@ -79,34 +97,53 @@ impl Database {
     }
 }
 
-#[derive(Clone, Debug)]
-struct Employee {
-    name: String,
-}
-
-#[derive(Debug)]
-struct KeyCard {
-    access_level: u16,
-}
-
-#[derive(Clone, Copy, Debug)]
-enum AuthorizationStatus {
-    Allow,
-    Deny,
-}
-
 fn authorize(
     employee_name: &str,
     location: ProtectedLocation
 ) -> Result<AuthorizationStatus, String> {
-    // connect to db
-
+    // * Write the body of the `authorize` function. The steps to authorize a user
+    //   are:
+    //     1. Connect to the database
     let db = Database::connect();
+    //     2. Find the employee with the `find_employee` database function
 
-    let employee = db.find_employee(employee_name);
-    let keycard = db.get_keycard(employee);
+    let db_clone = db.clone();
+    let employee = db?.find_employee(employee_name);
 
-    let access_level = ProtectedLocation::required_access_level(location);
+    match employee {
+        Ok(employee) => {
+            //     3. Get a keycard with the `get_keycard` database function
+            let keycard = db_clone?.get_keycard(&employee);
+
+            match keycard {
+                Ok(keycard) => {
+                    let access_level = keycard.access_level;
+                    let required_access_level = location.required_access_level();
+
+                    match access_level {
+                        access_level if access_level >= required_access_level =>
+                            Ok(AuthorizationStatus::Allow),
+                        _ => Ok(AuthorizationStatus::Deny),
+                    }
+                }
+                Err(keycard) => Err(keycard.to_string()),
+            }
+
+            //     4. Determine if the keycard's `access_level` is sufficient, using the
+            //        `required_access_level` function implemented on `ProtectedLocation`.
+            //        * Higher  println!("{:?}", keycard);`access_level` values grant more access to `ProtectedLocations`.
+            //          1000 can access 1000 and lower. 800 can access 500 but not 1000, ...
+        }
+
+        Err(employee) => Err(employee.to_string()),
+    }
+
+    // println!("{:?}", keycard.access_level);
+    // * Run the program after writing your `authorize` function. Expected output:
+    //     Ok(Allow)
+    //     Ok(Deny)
+    //     Err("Catherine doesn't have a keycard")
+    // * Use the question mark operator within the `authorize` function.
 }
 
 fn main() {
@@ -120,7 +157,7 @@ fn main() {
     // She doesn't have a keycard, so this should be an error.
     let catherine_authorized = authorize("Catherine", ProtectedLocation::Warehouse);
 
-    println!("{anita_authorized:?}");
-    println!("{brody_authorized:?}");
-    println!("{catherine_authorized:?}");
+    println!("anita_authorized {:?}", anita_authorized);
+        println!("{brody_authorized:?}");
+        println!("{catherine_authorized:?}");
 }
